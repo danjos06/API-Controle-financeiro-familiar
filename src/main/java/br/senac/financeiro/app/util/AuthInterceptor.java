@@ -8,10 +8,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Intercepta as rotas protegidas, valida o JWT do header
- * "Authorization: Bearer <token>" e guarda o id da conta na requisição.
- */
 public class AuthInterceptor implements HandlerInterceptor {
 
     public static final String ATRIBUTO_CONTA_ID = "contaId";
@@ -27,7 +23,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             return true;
         }
-        // cadastro de conta é público
         if ("POST".equalsIgnoreCase(request.getMethod()) && "/contas".equals(request.getRequestURI())) {
             return true;
         }

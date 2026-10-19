@@ -10,7 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // tudo exige token, exceto login e cadastro
         registry.addInterceptor(new AuthInterceptor(new JwtUtil()))
                 .addPathPatterns("/**")
                 .excludePathPatterns("/auth/**", "/error");

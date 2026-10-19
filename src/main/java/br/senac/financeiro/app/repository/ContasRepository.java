@@ -1,5 +1,6 @@
 package br.senac.financeiro.app.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,6 @@ public interface ContasRepository extends JpaRepository<ContasEntity, Integer> {
     boolean existsByEmail(String email);
 
     boolean existsByEmailAndIdNot(String email, Integer id);
-}
 
+    List<ContasEntity> findByFamiliaId(Integer familiaId);
+}

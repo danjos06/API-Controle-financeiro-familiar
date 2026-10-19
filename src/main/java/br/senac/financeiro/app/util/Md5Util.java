@@ -5,10 +5,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 
-/**
- * Hash MD5 simples, sem salt.
- * Obs.: serve para fins didáticos; em produção use BCrypt/Argon2.
- */
 public final class Md5Util {
 
     private Md5Util() {

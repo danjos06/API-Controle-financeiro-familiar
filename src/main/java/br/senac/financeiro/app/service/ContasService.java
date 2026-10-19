@@ -1,5 +1,6 @@
 package br.senac.financeiro.app.service;
 
+import java.util.List;
 import java.util.Map;
 
 import br.senac.financeiro.app.model.entity.ContasEntity;
@@ -22,6 +23,15 @@ public class ContasService {
 
     public ContasEntity criar(ContasEntity conta) {
         conta.setId(null);
+        if (conta.getSalario() == null) {
+            conta.setSalario(0.0);
+        }
+        if (conta.getLimiteGastos() == null) {
+            conta.setLimiteGastos(0.0);
+        }
+        if (contasRepository.existsByEmail(conta.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "E-mail já cadastrado");
+        }
         conta.setSenha(Md5Util.hash(conta.getSenha()));
         return contasRepository.save(conta);
     }
@@ -38,11 +48,35 @@ public class ContasService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada"));
     }
 
+    public ContasEntity buscarPorEmail(String email) {
+        return contasRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada com este e-mail"));
+    }
+
+    public List<ContasEntity> listar() {
+        return contasRepository.findAll();
+    }
+
     public ContasEntity atualizar(Integer id, ContasEntity dados) {
         ContasEntity conta = buscar(id);
-        conta.setNome(dados.getNome());
-        conta.setEmail(dados.getEmail());
-        conta.setSenha(Md5Util.hash(dados.getSenha()));
+        if (dados.getNome() != null && !dados.getNome().isBlank()) {
+            conta.setNome(dados.getNome());
+        }
+        if (dados.getEmail() != null && !dados.getEmail().isBlank()) {
+            if (contasRepository.existsByEmailAndIdNot(dados.getEmail(), id)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "E-mail já está em uso");
+            }
+            conta.setEmail(dados.getEmail());
+        }
+        if (dados.getSenha() != null && !dados.getSenha().isBlank()) {
+            conta.setSenha(Md5Util.hash(dados.getSenha()));
+        }
+        if (dados.getSalario() != null) {
+            conta.setSalario(dados.getSalario());
+        }
+        if (dados.getLimiteGastos() != null) {
+            conta.setLimiteGastos(dados.getLimiteGastos());
+        }
         return contasRepository.save(conta);
     }
 

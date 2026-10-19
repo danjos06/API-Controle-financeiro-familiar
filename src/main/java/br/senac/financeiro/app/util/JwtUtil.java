@@ -33,7 +33,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    /** Valida o token e devolve o id da conta. Devolve 401 se inválido/expirado. */
     public Integer validarToken(String token) {
         try {
             Claims claims = Jwts.parser()
